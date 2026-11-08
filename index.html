@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Smart TV</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="wrap">
+  <h1>Smart TV</h1>
+
+  <form id="sf" action="https://www.google.com/search" method="get" onsubmit="return false;">
+    <div class="line">
+      <input id="q" name="q" type="text" placeholder="Поиск (введите запрос и нажмите OK)" autocomplete="off">
+      <button id="eng" type="button">Google</button>
+    </div>
+  </form>
+
+  <form id="uf" action="" method="get" onsubmit="return false;">
+    <div class="line">
+      <input id="u" type="text" placeholder="Открыть сайт: например wikipedia.org" autocomplete="off">
+      <button id="add" type="button">+ В избранное</button>
+      <button id="edit" type="button">Править: выкл</button>
+    </div>
+  </form>
+
+  <div id="favbox"></div>
+  <div id="appbox"></div>
+
+  <p id="hint">Стрелки - перемещение, OK - открыть. Кнопка HOME на пульте возвращает к меню телевизора.</p>
+</div>
+<script src="apps.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

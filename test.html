@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Диагностика ТВ</title>
+<style>
+body { background:#101820; color:#fff; font-family:Arial,sans-serif; font-size:24px; margin:0; padding:30px 4%; }
+h1 { color:#ffb400; font-weight:normal; font-size:40px; margin:0 0 16px 0; }
+td { padding:6px 18px 6px 0; vertical-align:top; }
+.ok { color:#6f6; } .no { color:#f66; }
+a { color:#ffb400; }
+</style>
+</head>
+<body>
+<h1>Диагностика телевизора</h1>
+<table id="t"></table>
+<p>Нажимайте кнопки пульта - здесь появится код клавиши (нужен, чтобы узнать коды Back и цветных кнопок):</p>
+<p id="key" style="font-size:34px;color:#ffb400">-</p>
+<p><a href="index.html">&larr; В меню</a></p>
+<script>
+var t = document.getElementById('t');
+function row(name, val, ok) {
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + name + '</td><td class="' + (ok === true ? 'ok' : ok === false ? 'no' : '') + '">' + val + '</td>';
+  t.appendChild(tr);
+  return tr.lastChild;
+}
+row('User-Agent', navigator.userAgent);
+row('Экран', screen.width + 'x' + screen.height);
+row('Окно браузера', window.innerWidth + 'x' + window.innerHeight);
+var ls = false; try { ls = !!window.localStorage; } catch (e) {}
+row('localStorage (избранное)', ls ? 'да' : 'нет', ls);
+row('JSON', window.JSON ? 'да' : 'нет', !!window.JSON);
+row('querySelector', document.querySelector ? 'да' : 'нет', !!document.querySelector);
+row('Canvas', document.createElement('canvas').getContext ? 'да' : 'нет', !!document.createElement('canvas').getContext);
+var v = document.createElement('video');
+if (v.canPlayType) {
+  row('video: MP4/H.264', v.canPlayType('video/mp4; codecs="avc1.42E01E"') || 'нет', !!v.canPlayType('video/mp4; codecs="avc1.42E01E"'));
+  row('video: WebM', v.canPlayType('video/webm; codecs="vp8"') || 'нет', !!v.canPlayType('video/webm; codecs="vp8"'));
+} else { row('HTML5 video', 'нет', false); }
+
+/* Проверка HTTPS: грузим маленькую картинку по http и по https */
+function imgTest(name, src) {
+  var cell = row(name, 'проверка...');
+  var im = new Image(), done = false;
+  im.onload = function () { done = true; cell.className = 'ok'; cell.innerHTML = 'работает'; };
+  im.onerror = function () { if (!done) { done = true; cell.className = 'no'; cell.innerHTML = 'не загрузилось'; } };
+  setTimeout(function () { if (!done) { done = true; cell.className = 'no'; cell.innerHTML = 'нет ответа (10 с)'; } }, 10000);
+  im.src = src + '?' + new Date().getTime();
+}
+imgTest('HTTP-соединение', 'http://www.google.com/favicon.ico');
+imgTest('HTTPS-соединение', 'https://www.google.com/favicon.ico');
+
+document.onkeydown = function (e) {
+  e = e || window.event;
+  document.getElementById('key').innerHTML = 'keyCode = ' + e.keyCode;
+  if (e.keyCode >= 37 && e.keyCode <= 40) { return true; }
+  return false;
+};
+</script>
+</body>
+</html>
